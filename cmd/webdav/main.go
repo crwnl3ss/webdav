@@ -195,25 +195,6 @@ func parseConfig() *cfg {
 
 func basicAuth(c *cfg) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("WWW-Authenticate", `Basic realm="Restricted"`)
-
-		username, password, authOK := r.BasicAuth()
-		if authOK == false {
-			http.Error(w, "Not authorized", 401)
-			return
-		}
-
-		p, ok := c.auth[username]
-		if !ok {
-			http.Error(w, "Not authorized", 401)
-			return
-		}
-
-		if password != p {
-			http.Error(w, "Not authorized", 401)
-			return
-		}
-
 		c.webdav.ServeHTTP(w, r)
 	})
 }
